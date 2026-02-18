@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  mysql:
+    build: .
+    image: shaileshbolduc/database-service:1.0.0
+    container_name: devops_mysql
+    env_file:
+      - .env
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  security-scan:
+    image: aquasec/trivy:latest
+    depends_on:
+      - mysql
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: image shaileshbolduc/database-service:1.0.0
+
+volumes:
+  mysql_data:
